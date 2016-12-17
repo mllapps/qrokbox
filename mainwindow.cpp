@@ -26,6 +26,11 @@
 #include "ui_mainwindow.h"
 #include "mrokbox.h"
 #include "mproducer.h"
+
+/**
+ * @brief MainWindow::MainWindow
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
