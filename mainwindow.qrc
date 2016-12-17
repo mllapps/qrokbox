@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/assets">
+        <file>assets/drop-here.png</file>
+    </qresource>
+</RCC>
