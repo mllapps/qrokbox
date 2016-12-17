@@ -1,3 +1,14 @@
+/**
+ * @file mainwindow.cpp
+ * @date 2016-12-17
+ * @author flomll (mueller@mllapps.com)
+ *
+ * This document contains proprietary information belonging to mllapps.com.
+ * Passing on and copying of this document, use and communication of its
+ * contents is not permitted without prior written authorization.
+ *
+ * @brief
+ */
 #include <QDebug>
 #include <QPixmap>
 #include <QDir>
@@ -9,13 +20,12 @@
 #include <QThread>
 #include <QMimeData>
 #include <QDir>
+#include <QInputDialog>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mrokbox.h"
-
-
-
+#include "mproducer.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -34,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << "file could not loaded";
     }
     ui->labelDropHere->setPixmap(drophere);
+    ui->galleryName->setHidden(true);
 
 
     connect(ui->pushButton, SIGNAL(clicked(bool)),
@@ -45,9 +56,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+bool MainWindow::showDialog()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Enter the name of the gallery"),
+                                         tr("Name of gallery:"), QLineEdit::Normal,
+                                         "", &ok);
+    if (ok && !text.isEmpty())
+        ui->galleryName->setText(text);
+
+    return ok;
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
-
     if (e->mimeData()->hasUrls()) {
         e->acceptProposedAction();
     }
@@ -62,7 +84,10 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
  */
 void MainWindow::dropEvent(QDropEvent *e)
 {
-    int imageIdCnt = 1;
+    if(!showDialog() ) {
+        return;
+    }
+
     // Clear the console output before start a new parsing process
     ui->console->clear();
 
@@ -72,8 +97,6 @@ void MainWindow::dropEvent(QDropEvent *e)
                 QDir::homePath(),
                 now.toString("yyyy-MM-dd_HH-mm-ss")
                 );
-
-    //qDebug() << exportPathDefault;
 
     QDir dir(exportPathDefault);
     if (!dir.exists()){
@@ -90,63 +113,28 @@ void MainWindow::dropEvent(QDropEvent *e)
                 );
 
 
-    foreach (const QUrl &url, e->mimeData()->urls()) {
-        const QString &fileName = url.toLocalFile();
-        QDir d = QFileInfo(fileName).absoluteDir();
-        QString exportPath = d.path();
-        QStringList parts = exportPath.split("/");
+    QThread * thread = new QThread();
+    MProducer * producer = new MProducer(this);
+    producer->setGalleryName(ui->galleryName->text());
+    producer->setExportPath(myGalleryName);
+    producer->setUrls(e->mimeData()->urls());
 
-        parts.removeAt(parts.count()-1);
-        if(parts.at(0).compare("") == 0) {
-            parts.removeAt(0);
-        }
+    connect(thread, SIGNAL(finished()),
+            thread, SLOT(deleteLater()) );
+    connect(thread, SIGNAL(started()),
+            producer, SLOT(run()));
+    connect(producer, SIGNAL(finished()),
+            thread, SLOT(quit()));
+    connect(producer, SIGNAL(finished()),
+            producer, SLOT(deleteLater()));
 
-        exportPath.clear();
-        for(int i = 0; i < parts.count(); i++)
-        {
-            exportPath.append("/").append(parts.at(i));
-        }
-        qDebug() << "Dropped file:" << fileName;
-        //qDebug() << "export path: " << exportPath;
-
-        QThread * thread = new QThread();
-        MRokBox * lightbox = new MRokBox();
-        lightbox->setImageInputPath(fileName);
-        lightbox->setExportPath(exportPathDefault);
-        lightbox->setImageId(imageIdCnt++);
-        lightbox->setGalleryName(ui->galleryName->text());
-        lightbox->setGalleryNamePath(myGalleryName);
-
-        lightbox->moveToThread(thread);
-
-        connect(thread, SIGNAL(finished()),
-                thread, SLOT(deleteLater()) );
-        connect(thread, SIGNAL(started()),
-                lightbox, SLOT(run()));
-        connect(lightbox, SIGNAL(finished()),
-                thread, SLOT(quit()));
-        connect(lightbox, SIGNAL(finished()),
-                lightbox, SLOT(deleteLater()));
-
-        connect(lightbox, SIGNAL(writeToConsole(QString)),
-                this, SLOT(writeToConsole(QString)));
-
-        thread->start();
-
-        //emit setFilePath(fileName, exportPath);
-    }
+    thread->start();
 }
 
 void MainWindow::writeToConsole(const QString &msg)
 {
     QString old(msg);
-    old.append("\n");
-
     ui->console->appendPlainText(old);
-
-//    QTextCursor c = ui->console->textCursor();
-//    c.movePosition(QTextCursor::End);
-//    ui->console->setTextCursor(c);
 }
 
 void MainWindow::toggleConsole(bool val)

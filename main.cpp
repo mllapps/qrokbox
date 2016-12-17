@@ -1,9 +1,13 @@
 /**
  * @file main.cpp
- * @author mueller@mllapps.com
- * @copyright Copyright (c) by www.mllapps.com
+ * @date 2016-12-17
+ * @author flomll (mueller@mllapps.com)
  *
- * GPL v3
+ * This document contains proprietary information belonging to mllapps.com.
+ * Passing on and copying of this document, use and communication of its
+ * contents is not permitted without prior written authorization.
+ *
+ * @brief
  */
 #include "mainwindow.h"
 #include <QApplication>

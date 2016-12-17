@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mrokbox.cpp
+    mrokbox.cpp \
+    mproducer.cpp
 
 HEADERS  += mainwindow.h \
-    mrokbox.h
+    mrokbox.h \
+    mproducer.h
 
 FORMS    += mainwindow.ui
 
