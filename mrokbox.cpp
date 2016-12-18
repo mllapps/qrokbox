@@ -118,7 +118,7 @@ QImage * MRokBox::orientationCorrection(const QString& filepath)
 
     orientation = header.value(QExifImageHeader::Orientation);
     orientationValue = orientation.toLong();
-    qDebug() << "Orientation : " << orientationValue << " for " << filepath;
+    //qDebug() << "Orientation : " << orientationValue << " for " << filepath;
 
     item->load(filepath);
 
@@ -145,7 +145,7 @@ QImage * MRokBox::orientationCorrection(const QString& filepath)
 
     // respect the ratio and scale the image for the display
     if(_targetWidth > item->width() && _targetHeight > item->height()) {
-        qDebug() << "image is smaller w: " << item->width() << " h: " << item->height();
+        //qDebug() << "image is smaller w: " << item->width() << " h: " << item->height();
         scaleFactor = 1.0;
     }else {
         scaleFactorWidth = ( (float)_targetWidth - 40) / (float)item->width();
