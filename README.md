@@ -5,7 +5,7 @@ and resize the images to prefered sizes. Why do we implemnt not just a joomla we
 application is faster and I like Qt framework with C++. I am a native embedded developer so I prefer this 
 solution. In the feature maybe I implement a joomla web plugin for this.
 
-Screenshot: Coming soon...
+![mainscreen at startup](https://github.com/mllapps/qrokbox-generator/blob/master/doc/screenshots/01_mainscreen.png "Mainscreen at Startup")
 
 ## How to build?
 
