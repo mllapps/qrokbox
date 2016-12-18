@@ -52,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->galleryName->setHidden(true);
 
 
+    ui->status->setText(tr("Drop here"));
+
+
     connect(ui->pushButton, SIGNAL(clicked(bool)),
             this, SLOT(toggleConsole(bool)) );
 }
@@ -64,9 +67,14 @@ MainWindow::~MainWindow()
 bool MainWindow::showDialog()
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("Enter the name of the gallery"),
-                                         tr("Name of gallery:"), QLineEdit::Normal,
-                                         "", &ok);
+    QInputDialog dialog;
+    dialog.setWindowFlags(Qt::Popup);
+    QString text =  dialog.getText(this, tr("Enter the name of the gallery"),
+                   tr("Name of gallery:"), QLineEdit::Normal,
+                   "", &ok);
+//    QString text = QInputDialog::getText(this, tr("Enter the name of the gallery"),
+//                                         tr("Name of gallery:"), QLineEdit::Normal,
+//                                         "", &ok);
     if (ok && !text.isEmpty())
         ui->galleryName->setText(text);
 
@@ -148,9 +156,11 @@ void MainWindow::toggleConsole(bool val)
         ui->labelDropHere->setHidden(true);
         ui->console->setHidden(false);
         ui->galleryName->setReadOnly(true);
+        ui->pushButton->setText(tr("Hide"));
     }else {
         ui->labelDropHere->setHidden(false);
         ui->console->setHidden(true);
         ui->galleryName->setReadOnly(false);
+        ui->pushButton->setText(tr("Show"));
     }
 }

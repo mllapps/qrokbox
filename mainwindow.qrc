@@ -2,4 +2,7 @@
     <qresource prefix="/assets">
         <file>assets/drop-here.png</file>
     </qresource>
+    <qresource prefix="/styles">
+        <file>assets/styles/default.qss</file>
+    </qresource>
 </RCC>
