@@ -3,7 +3,7 @@
  * @date 2016-12-17
  * @author flomll (mueller@mllapps.com)
  *
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2016  flomll
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

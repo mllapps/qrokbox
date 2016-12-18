@@ -9,10 +9,11 @@
  *
  * @brief
  */
-#ifndef MLIGHTBOX_H
-#define MLIGHTBOX_H
+#ifndef MROKBOX_H
+#define MROKBOX_H
 
 #include <QObject>
+#include <QImage>
 
 class MRokBox : public QObject
 {
@@ -44,6 +45,8 @@ public:
     QString galleryNamePath() const;
     void setGalleryNamePath(const QString &galleryNamePath);
 
+    QImage * orientationCorrection(const QString& filepath);
+    
 signals:
     void finished();
     void writeToConsole(const QString& msg);
@@ -64,4 +67,4 @@ private:
 
 };
 
-#endif // MLIGHTBOX_H
+#endif // MROKBOX_H

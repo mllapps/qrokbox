@@ -3,9 +3,20 @@
  * @date 2016-12-17
  * @author flomll (mueller@mllapps.com)
  *
- * This document contains proprietary information belonging to mllapps.com.
- * Passing on and copying of this document, use and communication of its
- * contents is not permitted without prior written authorization.
+ * Copyright (C) 2016  flomll
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @brief
  */
@@ -20,7 +31,9 @@
 #include <QThread>
 #include <QMimeData>
 #include <QDir>
+#include <QProcess>
 #include <QInputDialog>
+#include <QDesktopServices>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -42,17 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Activate the draq & drop event
     setAcceptDrops(true);
 
-    // Load the drag & drop image
-    QPixmap drophere;
-    QString resource = QString(":/assets/assets/drop-here.png");
-    if(drophere.load(resource) == false) {
-        qDebug() << "file could not loaded";
-    }
-    ui->labelDropHere->setPixmap(drophere);
     ui->galleryName->setHidden(true);
 
 
-    ui->status->setText(tr("Drop here"));
+    ui->status->setText(tr("Drop here..."));
 
 
     connect(ui->pushButton, SIGNAL(clicked(bool)),
@@ -66,15 +72,16 @@ MainWindow::~MainWindow()
 
 bool MainWindow::showDialog()
 {
+    this->activateWindow();
     bool ok;
     QInputDialog dialog;
     dialog.setWindowFlags(Qt::Popup);
     QString text =  dialog.getText(this, tr("Enter the name of the gallery"),
-                   tr("Name of gallery:"), QLineEdit::Normal,
-                   "", &ok);
-//    QString text = QInputDialog::getText(this, tr("Enter the name of the gallery"),
-//                                         tr("Name of gallery:"), QLineEdit::Normal,
-//                                         "", &ok);
+                                   tr("Name of gallery:"), QLineEdit::Normal,
+                                   "", &ok);
+    //    QString text = QInputDialog::getText(this, tr("Enter the name of the gallery"),
+    //                                         tr("Name of gallery:"), QLineEdit::Normal,
+    //                                         "", &ok);
     if (ok && !text.isEmpty())
         ui->galleryName->setText(text);
 
@@ -113,11 +120,13 @@ void MainWindow::dropEvent(QDropEvent *e)
 
     QDir dir(exportPathDefault);
     if (!dir.exists()){
-      dir.mkdir(exportPathDefault);
+        dir.mkdir(exportPathDefault);
+
+        QDesktopServices::openUrl(QUrl::fromLocalFile(exportPathDefault));
     }
 
     ui->console->setHidden(false);
-    ui->labelDropHere->setHidden(true);
+    ui->status->setHidden(true);
     ui->galleryName->setReadOnly(true);
 
     QString myGalleryName = QString("%1%2").arg(
@@ -125,11 +134,11 @@ void MainWindow::dropEvent(QDropEvent *e)
                 ui->galleryName->text()
                 );
 
-
     QThread * thread = new QThread();
     MProducer * producer = new MProducer(this);
     producer->setGalleryName(ui->galleryName->text());
-    producer->setExportPath(myGalleryName);
+    producer->setExportPath(exportPathDefault);
+    producer->setGalleryExportPath(myGalleryName);
     producer->setUrls(e->mimeData()->urls());
 
     connect(thread, SIGNAL(finished()),
@@ -153,12 +162,12 @@ void MainWindow::writeToConsole(const QString &msg)
 void MainWindow::toggleConsole(bool val)
 {
     if(ui->console->isHidden()) {
-        ui->labelDropHere->setHidden(true);
+        ui->status->setHidden(true);
         ui->console->setHidden(false);
         ui->galleryName->setReadOnly(true);
         ui->pushButton->setText(tr("Hide"));
     }else {
-        ui->labelDropHere->setHidden(false);
+        ui->status->setHidden(false);
         ui->console->setHidden(true);
         ui->galleryName->setReadOnly(false);
         ui->pushButton->setText(tr("Show"));

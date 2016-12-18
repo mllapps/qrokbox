@@ -18,14 +18,20 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mrokbox.cpp \
     mproducer.cpp \
-    mapplication.cpp
+    mapplication.cpp \
+    lib/metadata/qexifimageheader.cpp \
+    lib/metadata/qmetadata.cpp
 
 HEADERS  += mainwindow.h \
     mrokbox.h \
     mproducer.h \
-    mapplication.h
+    mapplication.h \
+    lib/metadata/qexifimageheader.h \
+    lib/metadata/qmetadata.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     mainwindow.qrc
+
+INCLUDEPATH += lib

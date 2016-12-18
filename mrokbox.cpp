@@ -9,11 +9,12 @@
  *
  * @brief
  */
-#include "mrokbox.h"
-
 #include <QImage>
 #include <QFileInfo>
 #include <QDebug>
+
+#include "mrokbox.h"
+#include "metadata/qexifimageheader.h"
 
 MRokBox::MRokBox(QObject *parent) : QObject(parent),
     _imageId(0),
@@ -80,41 +81,6 @@ void MRokBox::setImageId(int imageId)
     _imageId = imageId;
 }
 
-void MRokBox::run()
-{
-    QString albumName = "myalbum";
-    QString captionText ="";
-    QFileInfo fileInfo(_imageInputPath);
-//    QString filename(fileInfo.fileName());
-    QString filename = QString("image_%1.jpg").arg(
-                QString::number(_imageId)
-                );
-
-    QString filePath = QString("%1/%2").arg(
-                _exportPath,
-                filename
-                );
-
-    if(!_galleryName.isEmpty() && _galleryName.compare("") != 0) {
-        albumName = _galleryName;
-    }
-
-    //qDebug() << "filepath: " << filePath;
-    QImage inputImage(_imageInputPath);
-    QImage outputImage = inputImage.scaled(_targetWidth, _targetHeight, Qt::KeepAspectRatio);
-
-    outputImage.save(filePath,0, _targetQuality);
-
-    QString msg = QString("<a data-rokbox href=\"%1/%2/%3\" data-rokbox-album=\"%4\" data-rokbox-caption=\"%5\" data-rokbox-generate-thumbnail></a>").arg(
-                "images/pixc",
-                _galleryNamePath,
-                filename,
-                albumName,
-                captionText);
-
-    emit writeToConsole(msg);
-}
-
 QString MRokBox::galleryNamePath() const
 {
     return _galleryNamePath;
@@ -133,4 +99,105 @@ QString MRokBox::galleryName() const
 void MRokBox::setGalleryName(const QString &galleryName)
 {
     _galleryName = galleryName;
+}
+
+QImage * MRokBox::orientationCorrection(const QString& filepath)
+{
+    QExifValue orientation;
+    long orientationValue;
+    QImage * item = new QImage();
+    QImage * rotated;
+    QTransform rotation;
+    float scaleFactor = 0.0;
+    float scaleFactorHeight = 0.0;
+    float scaleFactorWidth = 0.0;
+
+
+    // Read the exif data from the file and correct the rotation
+    QExifImageHeader header(filepath);
+
+    orientation = header.value(QExifImageHeader::Orientation);
+    orientationValue = orientation.toLong();
+    qDebug() << "Orientation : " << orientationValue << " for " << filepath;
+
+    item->load(filepath);
+
+    // correct the orientation
+    if(orientationValue == 8) {
+        int rotationValue = -90;
+        rotation.rotate(rotationValue);
+        rotated = new QImage(item->transformed(rotation));
+        delete item; item = 0;
+        item = rotated;
+    }else if(orientationValue == 3) {
+        int rotationValue = -180;
+        rotation.rotate(rotationValue);
+        rotated = new QImage(item->transformed(rotation));
+        delete item; item = 0;
+        item = rotated;
+    }else if(orientationValue == 6) {
+        int rotationValue = 90;
+        rotation.rotate(rotationValue);
+        rotated = new QImage(item->transformed(rotation));
+        delete item; item = 0;
+        item = rotated;
+    }
+
+    // respect the ratio and scale the image for the display
+    if(_targetWidth > item->width() && _targetHeight > item->height()) {
+        qDebug() << "image is smaller w: " << item->width() << " h: " << item->height();
+        scaleFactor = 1.0;
+    }else {
+        scaleFactorWidth = ( (float)_targetWidth - 40) / (float)item->width();
+        scaleFactorHeight = ( (float)_targetHeight - 40) / (float)item->height();
+
+        if(scaleFactorWidth > scaleFactorHeight) {
+            scaleFactor = scaleFactorHeight;
+        }else {
+            scaleFactor = scaleFactorWidth;
+        }
+
+        //qDebug() << "scale factor: " << scaleFactor;
+        //qDebug() << "pixel ratio: " << qApp->devicePixelRatio();
+    }
+
+
+    //Set the image and invalidate our cached pixmap
+    return item;
+}
+
+void MRokBox::run()
+{
+    QString albumName = "myalbum";
+    QString captionText ="";
+    QFileInfo fileInfo(_imageInputPath);
+    QString filename = QString("image_%1.jpg").arg(
+                QString::number(_imageId)
+                );
+
+    QString filePath = QString("%1/%2").arg(
+                _exportPath,
+                filename
+                );
+
+    if(!_galleryName.isEmpty() && _galleryName.compare("") != 0) {
+        albumName = _galleryName;
+    }
+
+    QImage * inputImage = orientationCorrection(_imageInputPath);
+
+    QImage outputImage = inputImage->scaled(_targetWidth, _targetHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    outputImage.save(filePath,0, _targetQuality);
+
+    QString msg = QString("<a data-rokbox href=\"%1/%2/%3\" data-rokbox-album=\"%4\" data-rokbox-caption=\"%5\" data-rokbox-generate-thumbnail></a>").arg(
+                "images/pixc",
+                _galleryNamePath,
+                filename,
+                albumName,
+                captionText);
+
+    emit writeToConsole(msg);
+
+    delete inputImage; inputImage = 0;
 }
