@@ -7,6 +7,10 @@ solution. In the feature maybe I implement a joomla web plugin for this.
 
 ![mainscreen at startup](https://github.com/mllapps/qrokbox-generator/blob/master/doc/screenshots/01_mainscreen.png "Mainscreen at Startup")
 
+![Enter the name of gallery](https://github.com/mllapps/qrokbox-generator/blob/master/doc/screenshots/02_enter-galleryname.png "Name of gallery")
+
+![Output of the console](https://github.com/mllapps/qrokbox-generator/blob/master/doc/screenshots/03_console.png "Console output")
+
 ## How to build?
 
 Coming soon...
