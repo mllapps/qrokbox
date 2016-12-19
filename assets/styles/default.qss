@@ -85,3 +85,8 @@ QLabel#status {
 }
 
 /* End MainWindow */
+
+QRoundProgressBar {
+  background-color: #292929;
+  color: #ededed;
+}

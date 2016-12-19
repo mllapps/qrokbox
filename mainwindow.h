@@ -26,6 +26,8 @@
 #include <QMainWindow>
 #include <QDragEnterEvent>
 
+#include "widgets/qroundprogressbar.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -48,6 +50,9 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QRoundProgressBar * _progressBar;
+    double _step;
 };
 
 #endif // MAINWINDOW_H

@@ -20,18 +20,20 @@ SOURCES += main.cpp\
     mproducer.cpp \
     mapplication.cpp \
     lib/metadata/qexifimageheader.cpp \
-    lib/metadata/qmetadata.cpp
+    lib/metadata/qmetadata.cpp \
+    widgets/qroundprogressbar.cpp
 
 HEADERS  += mainwindow.h \
     mrokbox.h \
     mproducer.h \
     mapplication.h \
     lib/metadata/qexifimageheader.h \
-    lib/metadata/qmetadata.h
+    lib/metadata/qmetadata.h \
+    widgets/qroundprogressbar.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     mainwindow.qrc
 
-INCLUDEPATH += lib
+INCLUDEPATH += lib widgets

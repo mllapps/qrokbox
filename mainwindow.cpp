@@ -60,9 +60,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->status->setText(tr("Drop here..."));
 
-
     connect(ui->pushButton, SIGNAL(clicked(bool)),
             this, SLOT(toggleConsole(bool)) );
+
+    ui->progressBar->setBarStyle(QRoundProgressBar::StyleLine);
+    ui->progressBar->setMinimum(0.0);
+    ui->progressBar->setValue(0);
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +128,10 @@ void MainWindow::dropEvent(QDropEvent *e)
         QDesktopServices::openUrl(QUrl::fromLocalFile(exportPathDefault));
     }
 
+    ui->progressBar->setMaximum(e->mimeData()->urls().count());
+
+    _step = 100 / e->mimeData()->urls().count();
+
     ui->console->setHidden(false);
     ui->status->setHidden(true);
     ui->galleryName->setReadOnly(true);
@@ -157,6 +164,9 @@ void MainWindow::writeToConsole(const QString &msg)
 {
     QString old(msg);
     ui->console->appendPlainText(old);
+
+    double v = ui->progressBar->value();
+    ui->progressBar->setValue(v+_step);
 }
 
 void MainWindow::toggleConsole(bool val)
