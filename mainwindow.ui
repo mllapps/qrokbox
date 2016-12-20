@@ -26,7 +26,7 @@
    <string>QRokBox Generator</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="PlainTextEdit" name="console">
+   <widget class="Console" name="console">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -104,6 +104,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOk">
+   <property name="text">
+    <string>ok</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -114,9 +119,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PlainTextEdit</class>
+   <class>Console</class>
    <extends>QPlainTextEdit</extends>
-   <header>plaintextedit.h</header>
+   <header>console.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @brief
+ * @brief Console widget interface
  */
 #ifndef CONSOLE_H
 #define CONSOLE_H
@@ -33,7 +33,6 @@ signals:
 public:
     Console(QWidget * parent = 0);
 
-    void mouseDoubleClickEvent(QMouseEvent * e);
     void mousePressEvent(QMouseEvent * e);
 };
 

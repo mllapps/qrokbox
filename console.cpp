@@ -18,10 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @brief
+ * @brief Console widget implementation
  */
 #include <QDebug>
 #include <QTextCursor>
+#include <QApplication>
+#include <QClipboard>
 
 #include "console.h"
 
@@ -30,16 +32,15 @@ Console::Console(QWidget * parent) : QPlainTextEdit(parent)
 
 }
 
-void Console::mouseDoubleClickEvent(QMouseEvent *e)
-{
-}
-
 void Console::mousePressEvent(QMouseEvent *e)
 {
-    qDebug() << "clicked" << e->type();
+    QClipboard * cb = QApplication::clipboard();
+    cb->clear(QClipboard::Clipboard);
 
     QTextCursor c = this->textCursor();
     c.setPosition(0, QTextCursor::MoveAnchor);
     c.setPosition(this->toPlainText().count(), QTextCursor::KeepAnchor);
     this->setTextCursor(c);
+
+    cb->setText(this->toPlainText(), QClipboard::Clipboard);
 }
