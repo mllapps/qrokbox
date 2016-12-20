@@ -3,7 +3,7 @@
  * @date 2016-12-17
  * @author flomll (mueller@mllapps.com)
  *
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2016  www.mllapps.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @brief
+ * @brief QRokBox Generator
  */
 #include <QApplication>
 

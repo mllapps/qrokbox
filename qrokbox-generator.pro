@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     mapplication.cpp \
     lib/metadata/qexifimageheader.cpp \
     lib/metadata/qmetadata.cpp \
-    widgets/qroundprogressbar.cpp
+    widgets/qroundprogressbar.cpp \
+    console.cpp
 
 HEADERS  += mainwindow.h \
     mrokbox.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     mapplication.h \
     lib/metadata/qexifimageheader.h \
     lib/metadata/qmetadata.h \
-    widgets/qroundprogressbar.h
+    widgets/qroundprogressbar.h \
+    console.h
 
 FORMS    += mainwindow.ui
 

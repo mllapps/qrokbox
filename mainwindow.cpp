@@ -66,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progressBar->setBarStyle(QRoundProgressBar::StyleLine);
     ui->progressBar->setMinimum(0.0);
     ui->progressBar->setValue(0);
+
+    //@todo Currently disabled
+    ui->progressBar->setHidden(true);
 }
 
 MainWindow::~MainWindow()
