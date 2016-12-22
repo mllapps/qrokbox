@@ -47,7 +47,7 @@ public:
 public slots:
     void writeToConsole(const QString& msg);
     void toggleConsole(bool val);
-
+    void genIndexHtml(const QString& path);
 private:
     Ui::MainWindow *ui;
 

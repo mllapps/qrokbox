@@ -34,6 +34,7 @@
 #include <QProcess>
 #include <QInputDialog>
 #include <QDesktopServices>
+#include <QMenuBar>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -69,6 +70,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //@todo Currently disabled
     ui->progressBar->setHidden(true);
+
+    QMenu *helpMenu = new QMenu(tr("&Help"), this);
+    QAction *aboutAction = helpMenu->addAction(tr("&About"));
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutBox()));
+    menuBar()->addMenu(helpMenu);
 }
 
 MainWindow::~MainWindow()
@@ -129,6 +135,7 @@ void MainWindow::dropEvent(QDropEvent *e)
         dir.mkdir(exportPathDefault);
 
         QDesktopServices::openUrl(QUrl::fromLocalFile(exportPathDefault));
+        genIndexHtml(exportPathDefault);
     }
 
     ui->progressBar->setMaximum(e->mimeData()->urls().count());
@@ -162,6 +169,21 @@ void MainWindow::dropEvent(QDropEvent *e)
 
     thread->start();
 }
+
+void MainWindow::genIndexHtml(const QString& path)
+{
+    const char* msg = "<!DOCTYPE html><title></title>";
+    QFile file;
+    QString filePath = QString("%1/%2").arg(
+                path,
+                "index.html");
+    file.setFileName(filePath);
+    file.open(QIODevice::WriteOnly);
+
+    file.write(msg, qstrlen(msg));
+    file.close();
+}
+
 
 void MainWindow::writeToConsole(const QString &msg)
 {
