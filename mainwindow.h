@@ -48,6 +48,8 @@ public slots:
     void writeToConsole(const QString& msg);
     void toggleConsole(bool val);
     void genIndexHtml(const QString& path);
+
+    void showAboutBox();
 private:
     Ui::MainWindow *ui;
 

@@ -40,6 +40,7 @@
 #include "ui_mainwindow.h"
 #include "mrokbox.h"
 #include "mproducer.h"
+#include "aboutdialog.h"
 
 /**
  * @brief MainWindow::MainWindow
@@ -182,6 +183,15 @@ void MainWindow::genIndexHtml(const QString& path)
 
     file.write(msg, qstrlen(msg));
     file.close();
+}
+
+void MainWindow::showAboutBox()
+{
+    AboutDialog * about = new AboutDialog(this);
+    about->exec();
+
+    connect(about, SIGNAL(rejected()),
+            about, SLOT(deleteLater()) );
 }
 
 
