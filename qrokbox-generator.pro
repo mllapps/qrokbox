@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     lib/metadata/qexifimageheader.cpp \
     lib/metadata/qmetadata.cpp \
     widgets/qroundprogressbar.cpp \
-    console.cpp
+    console.cpp \
+    aboutdialog.cpp
 
 HEADERS  += mainwindow.h \
     mrokbox.h \
@@ -31,11 +32,22 @@ HEADERS  += mainwindow.h \
     lib/metadata/qexifimageheader.h \
     lib/metadata/qmetadata.h \
     widgets/qroundprogressbar.h \
-    console.h
+    console.h \
+    aboutdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    aboutdialog.ui
 
 RESOURCES += \
     mainwindow.qrc
 
 INCLUDEPATH += lib widgets
+
+#CONFIG-=app_bundle
+
+  DISTFILES += \
+    resource.rc
+
+win32:{
+  RC_FILE = resources.rc
+}

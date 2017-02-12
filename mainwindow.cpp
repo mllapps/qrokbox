@@ -61,15 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->status->setText(tr("Drop here..."));
-    // Load the drag & drop image
-    QImage img = QIcon(QString(":/assets/image.svg")).pixmap(QSize(80,80)).toImage();
-    QPixmap drophere;
-//        QString resource = QString(":/assets/image.svg");
-//        if(drophere.load(resource) == false) {
-//            qDebug() << "file could not loaded";
-//        }
-    drophere.fromImage(img);
-    ui->icon->setPixmap(drophere);
+    ui->icon->setHidden(false);
 
     connect(ui->pushButton, SIGNAL(clicked(bool)),
             this, SLOT(toggleConsole(bool)) );
@@ -219,9 +211,11 @@ void MainWindow::toggleConsole(bool val)
         ui->console->setHidden(false);
         ui->galleryName->setReadOnly(true);
         ui->pushButton->setText(tr("Hide"));
+        ui->icon->setHidden(true);
     }else {
         ui->status->setHidden(false);
         ui->console->setHidden(true);
+        ui->icon->setHidden(false);
         ui->galleryName->setReadOnly(false);
         ui->pushButton->setText(tr("Show"));
     }

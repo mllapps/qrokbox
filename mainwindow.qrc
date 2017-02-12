@@ -5,4 +5,9 @@
     <qresource prefix="/styles">
         <file>assets/styles/default.qss</file>
     </qresource>
+    <qresource prefix="/">
+        <file>assets/image.svg</file>
+        <file>assets/images.svg</file>
+        <file>assets/images.png</file>
+    </qresource>
 </RCC>

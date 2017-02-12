@@ -99,7 +99,6 @@ void MApplication::performOptions()
         qCritical("settings file does not exists!");
     }
 
-
     // Load an application style
     QFile styleFile(":/styles/assets/styles/default.qss");
     styleFile.open( QFile::ReadOnly );
